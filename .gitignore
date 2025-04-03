@@ -1,3 +1,18 @@
+# .NET Core and Visual Studio
+.vs/
+.vscode/
+.idea/
+bin/
+obj/
+publish/
+out/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.ide
+
 # Logs
 logs
 *.log
@@ -134,3 +149,9 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# ASP.NET Core Secrets File
+secrets.json
+
+# Entity Framework Migrations
+Migrations/

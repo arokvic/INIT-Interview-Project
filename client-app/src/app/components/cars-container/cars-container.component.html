@@ -1,0 +1,107 @@
+<div class="cars-container">
+    <div class="header">
+      <h1>Cars Management</h1>
+      <button class="add-btn" (click)="toggleAddForm()">
+        {{ showAddForm ? 'Cancel' : 'Add New Car' }}
+      </button>
+    </div>
+  
+    <div *ngIf="error" class="error-message">
+      {{ error }}
+      <button (click)="loadCars()">Try Again</button>
+    </div>
+  
+    <div *ngIf="showAddForm" class="add-form">
+      <h2>Add New Car</h2>
+      <form [formGroup]="carForm" (ngSubmit)="addCar()">
+        <div class="form-group">
+          <label for="model">Model</label>
+          <input type="text" id="model" formControlName="model">
+          <div *ngIf="carForm.get('model')?.invalid && carForm.get('model')?.touched" class="error">
+            Model is required
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label for="year">Year</label>
+          <input type="number" id="year" formControlName="year">
+          <div *ngIf="carForm.get('year')?.invalid && carForm.get('year')?.touched" class="error">
+            Valid year is required (1900-{{ maxYear }})
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label for="manufacturer">Manufacturer</label>
+          <input type="text" id="manufacturer" formControlName="manufacturer">
+          <div *ngIf="carForm.get('manufacturer')?.invalid && carForm.get('manufacturer')?.touched" class="error">
+            Manufacturer is required
+          </div>
+        </div>
+  
+        <button type="submit" [disabled]="carForm.invalid || isLoading">
+          {{ isLoading ? 'Adding...' : 'Add Car' }}
+        </button>
+      </form>
+    </div>
+
+    <div class="filter-section">
+        <h3>Filters</h3>
+        <div class="filter-controls">
+          <div class="filter-group">
+            <label for="yearFilter">Year:</label>
+            <select id="yearFilter" (change)="applyYearFilter($event)">
+              <option value="">All Years</option>
+              <option *ngFor="let year of availableYears" [value]="year" [selected]="yearFilter === year">
+                {{ year }}
+              </option>
+            </select>
+          </div>
+          <button class="clear-filters-btn" (click)="clearFilters()" [disabled]="!yearFilter">
+            Clear Filters
+          </button>
+        </div>
+        <div *ngIf="yearFilter" class="active-filters">
+          <span class="filter-badge">
+            Year: {{ yearFilter }}
+            <button class="remove-filter" (click)="clearFilters()">×</button>
+          </span>
+        </div>
+      </div>
+  
+    <div *ngIf="isLoading && !cars.length" class="loading">
+      Loading cars...
+    </div>
+  
+    <div *ngIf="!isLoading && !cars.length && !error" class="no-data">
+      No cars available. Add a new car to get started.
+    </div>
+  
+    <table *ngIf="cars.length" class="cars-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Year</th>
+          <th>Manufacturer</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let car of cars">
+          <td>{{ car.model }}</td>
+          <td>{{ car.year }}</td>
+          <td>{{ car.manufacturer }}</td>
+          <td>
+            <button class="delete-btn" (click)="deleteCar(car.id)" [disabled]="isLoading">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <div *ngIf="isLoading && cars.length" class="overlay">
+      <div class="spinner"></div>
+    </div>
+  </div>
+  
+  
